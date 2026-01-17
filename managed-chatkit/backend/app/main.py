@@ -169,7 +169,7 @@ def parse_json(response: httpx.Response) -> Mapping[str, Any]:
 
 
 # Mount frontend static files if they exist (production mode)
-frontend_path = Path(__file__).parent.parent / "frontend" / "dist"
+frontend_path = Path(__file__).parent.parent.parent / "frontend" / "dist"
 if frontend_path.exists():
     app.mount("/assets", StaticFiles(directory=frontend_path / "assets"), name="assets")
 

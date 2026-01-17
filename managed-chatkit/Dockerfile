@@ -4,7 +4,8 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
-ENV VITE_CHATKIT_WORKFLOW_ID=wf_6925f45748908190b9b4fd12df4b8935049d835cf5b1e7da
+ARG VITE_CHATKIT_WORKFLOW_ID
+ENV VITE_CHATKIT_WORKFLOW_ID=${VITE_CHATKIT_WORKFLOW_ID}
 RUN npm run build
 
 # Production stage

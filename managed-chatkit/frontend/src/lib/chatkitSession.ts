@@ -3,23 +3,25 @@ const readEnvString = (value: unknown): string | undefined =>
 
 export const workflowId = (() => {
   const id = readEnvString(import.meta.env.VITE_CHATKIT_WORKFLOW_ID);
-  if (!id || id.startsWith("wf_replace")) {
-    throw new Error("Set VITE_CHATKIT_WORKFLOW_ID in your .env file.");
+  if (id && !id.startsWith("wf_replace")) {
+    return id;
   }
-  return id;
+  return undefined;
 })();
 
 export function createClientSecretFetcher(
-  workflow: string,
+  workflow: string | undefined,
   endpoint = "/api/create-session"
 ) {
   return async (currentSecret: string | null) => {
     if (currentSecret) return currentSecret;
 
+    const body = workflow ? { workflow: { id: workflow } } : {};
+
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ workflow: { id: workflow } }),
+      body: JSON.stringify(body),
     });
 
     const payload = (await response.json().catch(() => ({}))) as {
